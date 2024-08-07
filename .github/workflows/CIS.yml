@@ -1,0 +1,23 @@
+name: CIS
+
+on: [push]
+
+jobs:
+  scan:
+    name: Container Image Scanning
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Install environment
+      uses: docker/setup-buildx-action@v3.6.1
+    - name: Install Docker Scout # https://docs.docker.com/scout/install/
+      uses: |
+        curl -fsSL https://raw.githubusercontent.com/docker/scout-cli/main/install.sh -o install-scout.sh
+        sh install-scout.sh
+    - name: Build Docker image
+      run: docker build -f Dockerfile -t pygoat-lab:latest .
+    - name: Scan Docker image
+      run: | 
+        docker scout quickview
+        docker scout cves
