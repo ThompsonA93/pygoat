@@ -1,0 +1,20 @@
+name: SAST
+
+on: [push]
+
+jobs:
+  scan:
+    name: Run Bandit
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Install environment
+      uses: actions/setup-python@v2
+      with: 
+        python-version: 3.8
+    - name: Install Bandit
+      run: pip install bandit
+    - name: Scan
+      run: bandit -r .
+
